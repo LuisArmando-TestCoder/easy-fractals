@@ -29,20 +29,14 @@ preset(({
             ...line,
             distance: line.distance * globalConfig.distanceDecrement
         }
-        // console.log('lineCopy', lineCopy);
         const distribution = getDistribution(globalConfig.distribution);
-        // const index = globalConfig.limit - this.currentLimit + 1;
         const getRotation = direction =>
         lineCopy.rotation + (globalConfig.limit * distribution.length * direction);
-        const setRotation = direction => (
-            // lineCopy.rotation = getRotation(direction),
-            getRotation(direction)
-        );
         const vertex = lineCopy.group[1];
         const getChild = direction => getDistantVertex(
             lineCopy.distance,
             vertex,
-            setRotation(direction)
+            getRotation(direction)
         );
         const makeLine = (group, additional = {}) => ({
             ...lineCopy, group, ...additional
@@ -50,11 +44,6 @@ preset(({
 
         return distribution
         .map(n => {
-            // console.log('getRotation(n)', getRotation(n));
-            // console.log('vertex', vertex);
-            // console.log('getChild(n)', getChild(n));
-            // console.log('n', n);
-            // console.log([...new Array(100)].map(n => '-').join(''));
             return makeLine(
                 [
                     vertex,
@@ -69,7 +58,7 @@ preset(({
     }
 
     function recursiveFractal(vertices, limit = 1, allVertices = []) {
-        const newVertices = vertices.map(splitLineVertex.bind({currentLimit: limit}));
+        const newVertices = vertices.map(splitLineVertex);
 
         allVertices.push(newVertices);
         if (limit <= 1) return allVertices.flat(2);
@@ -100,7 +89,7 @@ preset(({
                 rotation: getInitialRotation(),
                 distance: globalConfig.initial.distance
             };
-            const children = splitLineVertex.call({currentLimit: globalConfig.limit}, line);
+            const children = splitLineVertex(line);
             const tree = [
                 line,
                 ...children,
@@ -109,8 +98,6 @@ preset(({
 
             return tree;
         }).flat();
-
-
 
     draw(() => {
         clear();
