@@ -10,8 +10,9 @@ preset(({
             distance: 180,
             rotation: 180,
             x: () => c.width / 2,
-            y: () => c.height
+            y: () => c.height / 2
         },
+        treesAmount: 7,
         distanceDecrement: 0.75,
         limit: 10,
         distribution: 2,
@@ -74,7 +75,6 @@ preset(({
         if (limit <= 1) return allVertices.flat(2);
         return recursiveFractal(newVertices.flat(), limit - 1, allVertices.flat());
     }
-
     const getVertex = (x, y) => ({
         x: x || globalConfig.initial.x(),
         y: y || globalConfig.initial.y()
@@ -83,28 +83,37 @@ preset(({
         x: x + Math.sin(degreesToRadians(rotation)) * distance,
         y: y + Math.cos(degreesToRadians(rotation)) * distance
     });
-    const vertex = getVertex();
-    const distantVertex = getDistantVertex(
-        globalConfig.initial.distance,
-        vertex,
-        globalConfig.initial.rotation
-    );
-    const line = {
-        group: [ vertex, distantVertex ],
-        w: globalConfig.limit,
-        c: '#000',
-        rotation: globalConfig.initial.rotation,
-        distance: globalConfig.initial.distance
-    };
-    const children = splitLineVertex.call({currentLimit: globalConfig.limit}, line);
-    const tree = [
-        line,
-        ...children,
-        ...recursiveFractal(children, globalConfig.limit)
-    ];
+
+    const trees = [...new Array(globalConfig.treesAmount)]
+        .map((_, i) => {
+            const getInitialRotation = () => 360 / globalConfig.treesAmount * i;
+            const vertex = getVertex();
+            const distantVertex = getDistantVertex(
+                globalConfig.initial.distance,
+                vertex,
+                getInitialRotation()
+            );
+            const line = {
+                group: [ vertex, distantVertex ],
+                w: globalConfig.limit,
+                c: '#000',
+                rotation: getInitialRotation(),
+                distance: globalConfig.initial.distance
+            };
+            const children = splitLineVertex.call({currentLimit: globalConfig.limit}, line);
+            const tree = [
+                line,
+                ...children,
+                ...recursiveFractal(children, globalConfig.limit)
+            ];
+
+            return tree;
+        }).flat();
+
+
 
     draw(() => {
         clear();
-        renderGroup('lines', tree);
+        renderGroup('lines', trees);
     });
 });
