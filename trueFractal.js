@@ -6,11 +6,15 @@ preset(({
 
     const degreesToRadians = degrees => degrees / 360 * (Math.PI * 2);
     const globalConfig = {
-        initialDistance: 200,
-        initialRotation: 180,
+        initial: {
+            distance: 180,
+            rotation: 180,
+            x: () => c.width / 2,
+            y: () => c.height
+        },
         distanceDecrement: 0.75,
-        limit: 7,
-        distribution: 2
+        limit: 10,
+        distribution: 2,
     }
     function getDistribution(times) {
         const distribution = [];
@@ -71,23 +75,26 @@ preset(({
         return recursiveFractal(newVertices.flat(), limit - 1, allVertices.flat());
     }
 
-    const getVertex = (x, y) => ({ x: x || c.width / 2, y: y || c.height });
+    const getVertex = (x, y) => ({
+        x: x || globalConfig.initial.x(),
+        y: y || globalConfig.initial.y()
+    });
     const getDistantVertex = (distance, { x, y }, rotation) => ({
         x: x + Math.sin(degreesToRadians(rotation)) * distance,
         y: y + Math.cos(degreesToRadians(rotation)) * distance
     });
     const vertex = getVertex();
     const distantVertex = getDistantVertex(
-        globalConfig.initialDistance,
+        globalConfig.initial.distance,
         vertex,
-        globalConfig.initialRotation
+        globalConfig.initial.rotation
     );
     const line = {
         group: [ vertex, distantVertex ],
         w: globalConfig.limit,
         c: '#000',
-        rotation: globalConfig.initialRotation,
-        distance: globalConfig.initialDistance
+        rotation: globalConfig.initial.rotation,
+        distance: globalConfig.initial.distance
     };
     const children = splitLineVertex.call({currentLimit: globalConfig.limit}, line);
     const tree = [
