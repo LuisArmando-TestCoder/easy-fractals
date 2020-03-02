@@ -1,22 +1,13 @@
-import preset from "./canvas-preset/index.js";
+import preset from './canvas-preset/index.js';
+import getGlobalConfig from './fractalConfig.js';
+
 preset(({
     c, size, draw, renderGroup, clear
 }) => {
     size();
 
+    const globalConfig = getGlobalConfig({c});
     const degreesToRadians = degrees => degrees / 360 * (Math.PI * 2);
-    const globalConfig = {
-        initial: {
-            distance: 180,
-            rotation: 180,
-            x: () => c.width / 2,
-            y: () => c.height / 2
-        },
-        treesAmount: 7,
-        distanceDecrement: 0.75,
-        limit: 10,
-        distribution: 2,
-    }
     function getDistribution(times) {
         const distribution = [];
         for (let i = 0;  i < times * 2 + 1; i++) {
@@ -75,7 +66,8 @@ preset(({
 
     const trees = [...new Array(globalConfig.treesAmount)]
         .map((_, i) => {
-            const getInitialRotation = () => 360 / globalConfig.treesAmount * i;
+            const getInitialRotation = () => 
+                360 / globalConfig.treesAmount * i + globalConfig.initial.rotation;
             const vertex = getVertex();
             const distantVertex = getDistantVertex(
                 globalConfig.initial.distance,
