@@ -6,11 +6,11 @@ preset(({
 
     const degreesToRadians = degrees => degrees / 360 * (Math.PI * 2);
     const globalConfig = {
-        initialDistance: 125,
+        initialDistance: 200,
         initialRotation: 180,
-        distanceDecrement: 0.65,
-        limit: 4,
-        distribution: 3
+        distanceDecrement: 0.75,
+        limit: 7,
+        distribution: 2
     }
     function getDistribution(times) {
         const distribution = [];
@@ -26,10 +26,9 @@ preset(({
         }
         // console.log('lineCopy', lineCopy);
         const distribution = getDistribution(globalConfig.distribution);
-        const index = globalConfig.limit - this.currentLimit + 1;
+        // const index = globalConfig.limit - this.currentLimit + 1;
         const getRotation = direction =>
-        lineCopy.rotation + lineCopy.rotation /
-        (distribution.length + 2 * index) * direction;
+        lineCopy.rotation + (globalConfig.limit * distribution.length * direction);
         const setRotation = direction => (
             // lineCopy.rotation = getRotation(direction),
             getRotation(direction)
@@ -49,6 +48,7 @@ preset(({
             // console.log('getRotation(n)', getRotation(n));
             // console.log('vertex', vertex);
             // console.log('getChild(n)', getChild(n));
+            // console.log('n', n);
             // console.log([...new Array(100)].map(n => '-').join(''));
             return makeLine(
                 [
@@ -56,7 +56,8 @@ preset(({
                     getChild(n)
                 ],
                 {
-                    rotation: getRotation(n)
+                    rotation: getRotation(n),
+                    w: lineCopy.w - 1
                 }
             )
         });
@@ -83,7 +84,7 @@ preset(({
     );
     const line = {
         group: [ vertex, distantVertex ],
-        w: 1,
+        w: globalConfig.limit,
         c: '#000',
         rotation: globalConfig.initialRotation,
         distance: globalConfig.initialDistance
