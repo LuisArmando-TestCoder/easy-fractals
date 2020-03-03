@@ -61,7 +61,8 @@ preset(({
                 ],
                 {
                     rotation: getRotation(n),
-                    w: lineCopy.w - 1
+                    w: lineCopy.w - 1,
+                    // c: `#000${this.currentLimit}`
                 }
             )
         });
