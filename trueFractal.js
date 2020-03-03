@@ -1,21 +1,13 @@
-import preset from "./canvas-preset/index.js";
+import preset from './canvas-preset/index.js';
+import getGlobalConfig from './fractalConfig.js';
+
 preset(({
     c, size, draw, renderGroup, clear
 }) => {
     size();
 
+    const globalConfig = getGlobalConfig({c});
     const degreesToRadians = degrees => degrees / 360 * (Math.PI * 2);
-    const globalConfig = {
-        initial: {
-            distance: 180,
-            rotation: 180,
-            x: () => c.width / 2,
-            y: () => c.height
-        },
-        distanceDecrement: 0.75,
-        limit: 10,
-        distribution: 2,
-    }
     function getDistribution(times) {
         const distribution = [];
         for (let i = 0;  i < times * 2 + 1; i++) {
@@ -28,20 +20,14 @@ preset(({
             ...line,
             distance: line.distance * globalConfig.distanceDecrement
         }
-        // console.log('lineCopy', lineCopy);
         const distribution = getDistribution(globalConfig.distribution);
-        // const index = globalConfig.limit - this.currentLimit + 1;
         const getRotation = direction =>
         lineCopy.rotation + (globalConfig.limit * distribution.length * direction);
-        const setRotation = direction => (
-            // lineCopy.rotation = getRotation(direction),
-            getRotation(direction)
-        );
         const vertex = lineCopy.group[1];
         const getChild = direction => getDistantVertex(
             lineCopy.distance,
             vertex,
-            setRotation(direction)
+            getRotation(direction)
         );
         const makeLine = (group, additional = {}) => ({
             ...lineCopy, group, ...additional
@@ -49,11 +35,6 @@ preset(({
 
         return distribution
         .map(n => {
-            // console.log('getRotation(n)', getRotation(n));
-            // console.log('vertex', vertex);
-            // console.log('getChild(n)', getChild(n));
-            // console.log('n', n);
-            // console.log([...new Array(100)].map(n => '-').join(''));
             return makeLine(
                 [
                     vertex,
@@ -69,13 +50,12 @@ preset(({
     }
 
     function recursiveFractal(vertices, limit = 1, allVertices = []) {
-        const newVertices = vertices.map(splitLineVertex.bind({currentLimit: limit}));
+        const newVertices = vertices.map(splitLineVertex);
 
         allVertices.push(newVertices);
         if (limit <= 1) return allVertices.flat(2);
         return recursiveFractal(newVertices.flat(), limit - 1, allVertices.flat());
     }
-
     const getVertex = (x, y) => ({
         x: x || globalConfig.initial.x(),
         y: y || globalConfig.initial.y()
@@ -84,28 +64,36 @@ preset(({
         x: x + Math.sin(degreesToRadians(rotation)) * distance,
         y: y + Math.cos(degreesToRadians(rotation)) * distance
     });
-    const vertex = getVertex();
-    const distantVertex = getDistantVertex(
-        globalConfig.initial.distance,
-        vertex,
-        globalConfig.initial.rotation
-    );
-    const line = {
-        group: [ vertex, distantVertex ],
-        w: globalConfig.limit,
-        c: '#000',
-        rotation: globalConfig.initial.rotation,
-        distance: globalConfig.initial.distance
-    };
-    const children = splitLineVertex.call({currentLimit: globalConfig.limit}, line);
-    const tree = [
-        line,
-        ...children,
-        ...recursiveFractal(children, globalConfig.limit)
-    ];
+
+    const trees = [...new Array(globalConfig.treesAmount)]
+        .map((_, i) => {
+            const getInitialRotation = () => 
+                360 / globalConfig.treesAmount * i + globalConfig.initial.rotation;
+            const vertex = getVertex();
+            const distantVertex = getDistantVertex(
+                globalConfig.initial.distance,
+                vertex,
+                getInitialRotation()
+            );
+            const line = {
+                group: [ vertex, distantVertex ],
+                w: globalConfig.limit,
+                c: '#000',
+                rotation: getInitialRotation(),
+                distance: globalConfig.initial.distance
+            };
+            const children = splitLineVertex(line);
+            const tree = [
+                line,
+                ...children,
+                ...recursiveFractal(children, globalConfig.limit)
+            ];
+
+            return tree;
+        }).flat();
 
     draw(() => {
         clear();
-        renderGroup('lines', tree);
+        renderGroup('lines', trees);
     });
 });
