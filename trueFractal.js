@@ -1,12 +1,26 @@
 import preset from './canvas-preset/index.js';
 import getGlobalConfig from './fractalConfig.js';
 
+function move(key) {
+    function to(b, atSpeed = 10) {
+        return this.a[key] += (b[key] - this.a[key]) / atSpeed;
+    }
+    return {
+        in: a => ({ to: to.bind({a}) })
+    }
+}
+
 preset(({
     c, size, draw, renderGroup, clear
-}) => {
+}) => {   
     size();
 
     const globalConfig = getGlobalConfig({c});
+    const localConfig = {
+        distance: 1,
+        distanceDecrement: 0.1,
+        atSpeed: 100
+    };
     const degreesToRadians = degrees => degrees / 360 * (Math.PI * 2);
     function getDistribution(times) {
         const distribution = [];
@@ -17,8 +31,7 @@ preset(({
     }
     function splitLineVertex(line) {
         const lineCopy = {
-            ...line,
-            distance: line.distance * globalConfig.distanceDecrement
+            ...line
         }
         const distribution = getDistribution(globalConfig.distribution);
         const getRotation = direction =>
@@ -42,8 +55,8 @@ preset(({
                 ],
                 {
                     rotation: getRotation(n),
-                    w: lineCopy.w - 1,
-                    // c: `#000${this.currentLimit}`
+                    distance: line.distance * localConfig.distanceDecrement,
+                    w: lineCopy.w - lineCopy.w * globalConfig.thicknessReductionStep,
                 }
             )
         });
@@ -64,23 +77,23 @@ preset(({
         x: x + Math.sin(degreesToRadians(rotation)) * distance,
         y: y + Math.cos(degreesToRadians(rotation)) * distance
     });
-
-    const trees = [...new Array(globalConfig.treesAmount)]
+    const getTrees = () =>
+        [...new Array(globalConfig.treesAmount)]
         .map((_, i) => {
             const getInitialRotation = () => 
                 360 / globalConfig.treesAmount * i + globalConfig.initial.rotation;
             const vertex = getVertex();
             const distantVertex = getDistantVertex(
-                globalConfig.initial.distance,
+                localConfig.distance,
                 vertex,
                 getInitialRotation()
             );
             const line = {
                 group: [ vertex, distantVertex ],
-                w: globalConfig.limit,
-                c: '#000',
+                w: globalConfig.initial.thickness,
+                c: globalConfig.initial.color,
                 rotation: getInitialRotation(),
-                distance: globalConfig.initial.distance
+                distance: localConfig.distance
             };
             const children = splitLineVertex(line);
             const tree = [
@@ -92,8 +105,21 @@ preset(({
             return tree;
         }).flat();
 
+    let trees = getTrees();
+
     draw(() => {
         clear();
+        trees.splice(0);
+        trees = getTrees();
+
+        move('distanceDecrement')
+        .in(localConfig)
+        .to(globalConfig, localConfig.atSpeed);
+
+        move('distance')
+        .in(localConfig)
+        .to(globalConfig.initial, localConfig.atSpeed * 2);
+
         renderGroup('lines', trees);
     });
 });
