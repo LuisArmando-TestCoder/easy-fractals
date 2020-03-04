@@ -19,7 +19,6 @@ preset(({
     const localConfig = {
         distance: 1,
         distanceDecrement: 0.1,
-        atSpeed: 100
     };
     const degreesToRadians = degrees => degrees / 360 * (Math.PI * 2);
     function getDistribution(times) {
@@ -108,17 +107,17 @@ preset(({
     let trees = getTrees();
 
     draw(() => {
-        clear();
+        clear(globalConfig.background);
         trees.splice(0);
         trees = getTrees();
 
         move('distanceDecrement')
         .in(localConfig)
-        .to(globalConfig, localConfig.atSpeed);
+        .to(globalConfig, globalConfig.growingSpeed);
 
         move('distance')
         .in(localConfig)
-        .to(globalConfig.initial, localConfig.atSpeed * 2);
+        .to(globalConfig.initial, globalConfig.growingSpeed * 2);
 
         renderGroup('lines', trees);
     });
