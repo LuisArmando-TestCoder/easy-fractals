@@ -1,3 +1,18 @@
+:root {
+    --dark: #141E30;
+    --light: #243B55;
+}
+
+.container {
+    background: var(--dark);
+    background: -webkit-radial-gradient(var(--light), var(--dark));
+    background: radial-gradient(var(--light), var(--dark));
+}
+
+canvas {
+    mix-blend-mode: screen;
+}
+
 body, canvas {
     margin: 0;
     display: block;
