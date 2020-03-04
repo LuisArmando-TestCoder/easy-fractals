@@ -11,14 +11,14 @@ function move(key) {
 }
 
 preset(({
-    c, size, draw, renderGroup, clear, random
+    c, size, draw, renderGroup, clear
 }) => {   
     size();
 
     const globalConfig = getGlobalConfig({c});
     const localConfig = {
-        distance: 100,
-        distanceDecrement: 0.75,
+        distance: 1,
+        distanceDecrement: 0.1,
     };
     const degreesToRadians = degrees => degrees / 360 * (Math.PI * 2);
     function getDistribution(times) {
@@ -73,8 +73,8 @@ preset(({
         y: y || globalConfig.initial.y()
     });
     const getDistantVertex = (distance, { x, y }, rotation) => ({
-        x: x + Math.sin(degreesToRadians(rotation)) * distance * random(1),
-        y: y + Math.cos(degreesToRadians(rotation)) * distance * random(1)
+        x: x + Math.sin(degreesToRadians(rotation)) * distance,
+        y: y + Math.cos(degreesToRadians(rotation)) * distance
     });
     const getTrees = () =>
         [...new Array(globalConfig.treesAmount)]
@@ -108,16 +108,16 @@ preset(({
 
     draw(() => {
         clear(globalConfig.background);
-        // trees.splice(0);
-        // trees = getTrees();
+        trees.splice(0);
+        trees = getTrees();
 
-        // move('distanceDecrement')
-        // .in(localConfig)
-        // .to(globalConfig, globalConfig.growingSpeed);
+        move('distanceDecrement')
+        .in(localConfig)
+        .to(globalConfig, globalConfig.growingSpeed);
 
-        // move('distance')
-        // .in(localConfig)
-        // .to(globalConfig.initial, globalConfig.growingSpeed * 2);
+        move('distance')
+        .in(localConfig)
+        .to(globalConfig.initial, globalConfig.growingSpeed * 2);
 
         renderGroup('lines', trees);
     });
