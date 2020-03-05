@@ -1,26 +1,19 @@
 import preset from './canvas-preset/index.js';
-import getGlobalConfig from './fractalConfig.js';
+import getGlobalConfig from './globalConfig.js';
 import createForest from './createForest.js';
-
-function move(key) {
-    function to(b, atSpeed = 10) {
-        return this.a[key] += (b[key] - this.a[key]) / atSpeed;
-    }
-    return {
-        in: a => ({ to: to.bind({a}) })
-    }
-}
+import createSky from './createSky.js';
 
 preset(canvas => {
-
     canvas.size();
 
-    const forest = createForest(canvas);
     const globalConfig = getGlobalConfig();
+    const forest = createForest(canvas);
+    const sky = createSky(canvas);
 
     canvas.draw(() => {
         canvas.clear(globalConfig.background);
 
         canvas.renderGroup('lines', forest);
+        canvas.renderGroup('arc', sky.stars, sky.updateStar);
     });
 });

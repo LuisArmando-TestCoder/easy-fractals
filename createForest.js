@@ -1,12 +1,7 @@
+import getGlobalConfig from './globalConfig.js';
+import { degreesToRadians } from './utils.js';
 
-import getGlobalConfig from './fractalConfig.js';
-
-function createForest({
-    c, size, draw, renderGroup, clear, random
-}) {
-    function degreesToRadians(degrees) {
-        return degrees / 360 * (Math.PI * 2);
-    }
+function createForest({ c, random }) {
     function getVertex(x, y) {
         return {
             x: x || localConfig.x ? localConfig.x() : globalConfig.initial.x(),
@@ -15,8 +10,8 @@ function createForest({
     }
     function getDistantVertex (distance, { x, y }, rotation) {
         return {
-            x: x + Math.sin(degreesToRadians(rotation)) * distance * random(),
-            y: y + Math.cos(degreesToRadians(rotation)) * distance * random()
+            x: x + Math.sin(degreesToRadians(rotation)) * distance * ((random(distance) + 1) / distance),
+            y: y + Math.cos(degreesToRadians(rotation)) * distance * ((random(distance) + 1) / distance)
         };
     }
     function getDistribution(times) {
@@ -52,7 +47,7 @@ function createForest({
                 ],
                 {
                     rotation: getRotation(n),
-                    distance: line.distance * (localConfig.distanceDecrement || globalConfig.distanceDecrement),
+                    distance: line.distance * globalConfig.distanceDecrement,
                     w: lineCopy.w - lineCopy.w * globalConfig.thicknessReductionStep,
                 }
             )
@@ -66,26 +61,22 @@ function createForest({
         return recursiveFractal(newVertices.flat(), limit - 1, allVertices.flat());
     }
     function getTrees(treeIndex) {
-        // const {treesInForestAmount} = this;
-        // const MAX_DECIMAL_IN_HEXADECIMAL = 9;
-        // const opacity = treesInForestAmount / MAX_DECIMAL_IN_HEXADECIMAL * treeIndex;
         return [...new Array(globalConfig.fractalsPerTree)]
         .map((_, i) => {
             const getInitialRotation = () => 
                 360 / globalConfig.fractalsPerTree * i + globalConfig.initial.rotation;
             const vertex = getVertex();
             const distantVertex = getDistantVertex(
-                localConfig.distance || globalConfig.distance,
+                globalConfig.initial.distance,
                 vertex,
                 getInitialRotation()
             );
             const line = {
                 group: [ vertex, distantVertex ],
                 w: globalConfig.initial.thickness,
-                // c: globalConfig.initial.color + opacity,
                 c: globalConfig.initial.color,
                 rotation: getInitialRotation(),
-                distance: localConfig.distance || globalConfig.distance
+                distance: globalConfig.initial.distance
             };
             const children = splitLineVertex(line);
             const tree = [
@@ -99,13 +90,13 @@ function createForest({
     }
     function getForest(treesInForestAmount) {
         return [...new Array(treesInForestAmount).keys()]
-            .map(getTrees.bind({treesInForestAmount})).flat();
+            .map(getTrees).flat();
     }
 
     const globalConfig = getGlobalConfig({c});
     const localConfig = {
-        distance: 150,
-        distanceDecrement: 0.75,
+        distance: 120,
+        distanceDecrement: 0.675,
         x: () => random(c.width)
     };
     const forest = getForest(globalConfig.treesInForest);
