@@ -10,13 +10,13 @@ const getGlobalConfig = (props) => ({
     sky: {
         x: () => props.c.width / 2,
         y: () => 0,
-        starsAmount: 100,
+        starsAmount: 500,
         rotor: {
             direction: -1,
             speedResistance: 56,
         }
     },
-    treesInForest: 3,
+    treesInForest: 1,
     fractalsPerTree: 1,
     distanceDecrement: 0.655,
     thicknessReductionStep: 0.25,

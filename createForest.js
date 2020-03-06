@@ -97,7 +97,7 @@ function createForest({ c, random }) {
     const localConfig = {
         distance: 120,
         distanceDecrement: 0.675,
-        x: () => random(c.width)
+        // x: () => random(c.width)
     };
     const forest = getForest(globalConfig.treesInForest);
 
