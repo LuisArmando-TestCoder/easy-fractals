@@ -9,8 +9,8 @@
 
 .container {
     background: var(--primary);
-    background: -webkit-radial-gradient(circle at 50% 0%, var(--f1), var(--f2), var(--f3));
-    background: radial-gradient(circle at 50% 0%, var(--f1), var(--f2), var(--f3));
+    background: -webkit-radial-gradient(circle at 50% -25%, var(--f1), var(--f2), var(--f3));
+    background: radial-gradient(circle at 50% -25%, var(--f1), var(--f2), var(--f3));
 }
 
 .clickable-iframe {
