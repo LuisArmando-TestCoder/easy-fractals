@@ -7,12 +7,21 @@ preset(canvas => {
     canvas.size();
 
     const globalConfig = getGlobalConfig();
-    const forest = createForest(canvas);
     const sky = createSky(canvas);
+    let forest = createForest(canvas);
+
+    let frame = 0;
 
     canvas.draw(() => {
-        canvas.clear(globalConfig.background);
 
+        frame++;
+
+        if(!(frame % 512)) {
+            forest.splice(0);
+            forest = createForest(canvas);
+        }
+
+        canvas.clear(globalConfig.background);
         canvas.renderGroup('lines', forest);
         canvas.renderGroup('arc', sky.stars, sky.updateStar);
     });

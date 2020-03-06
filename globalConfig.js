@@ -13,7 +13,7 @@ const getGlobalConfig = (props) => ({
         starsAmount: 100,
         rotor: {
             direction: -1,
-            speedResistance: 256,
+            speedResistance: 56,
         }
     },
     treesInForest: 3,
