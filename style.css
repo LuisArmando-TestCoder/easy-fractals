@@ -1,12 +1,27 @@
 :root {
-    --dark: #141E30;
-    --light: #243CBF;
+    --f1: #014a90;
+    --f2: #5565cc;
+    --f3: #948fd8;
+    --f4: #c597df;
+    --f5: #e598e8;
+    --f6: #f899e9;
 }
 
 .container {
-    background: var(--dark);
-    background: -webkit-radial-gradient(var(--light), var(--dark));
-    background: radial-gradient(var(--light), var(--dark));
+    background: var(--primary);
+    background: -webkit-radial-gradient(circle at 50% 0%, var(--f1), var(--f2), var(--f3));
+    background: radial-gradient(circle at 50% 0%, var(--f1), var(--f2), var(--f3));
+}
+
+.clickable-iframe {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
 }
 
 canvas {
