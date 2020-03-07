@@ -21,8 +21,16 @@ preset(canvas => {
             forest = createForest(canvas);
         }
 
-        canvas.clear(globalConfig.background);
-        canvas.renderGroup('lines', forest);
+        // canvas.clear(globalConfig.background);
+        // canvas.clear();
+        var gradient = canvas.ctx.createRadialGradient(canvas.c.width / 2, canvas.c.height / 4, canvas.c.width, canvas.c.width / 2, -canvas.c.height / 4, canvas.c.width / 2);
+        gradient.addColorStop(0, ' #014a9022');
+        gradient.addColorStop(0.5, '#5565cc22');
+        gradient.addColorStop(1, '#948fd822');
+        canvas.ctx.fillStyle = gradient;
+        canvas.ctx.fillRect(0, 0, canvas.c.width, canvas.c.height);
+
         canvas.renderGroup('arc', sky.stars, sky.updateStar);
+        canvas.renderGroup('lines', forest);
     });
 });

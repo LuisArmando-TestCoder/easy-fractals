@@ -74,7 +74,7 @@ function createForest({ c, random }) {
             const line = {
                 group: [ vertex, distantVertex ],
                 w: globalConfig.initial.thickness,
-                c: globalConfig.initial.color,
+                c: globalConfig.treesColor,
                 rotation: getInitialRotation(),
                 distance: globalConfig.initial.distance
             };

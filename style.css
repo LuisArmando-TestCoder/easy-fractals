@@ -25,7 +25,7 @@
 }
 
 canvas {
-    mix-blend-mode: screen;
+    /* mix-blend-mode: screen; */
 }
 
 body, canvas {

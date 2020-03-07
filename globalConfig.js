@@ -4,7 +4,7 @@ const getGlobalConfig = (props) => ({
         rotation: 180,
         x: () => props.c.width / 2,
         y: () => props.c.height,
-        thickness: 4,
+        thickness: 9,
         color: '#fff',
     },
     sky: {
@@ -13,16 +13,17 @@ const getGlobalConfig = (props) => ({
         starsAmount: 500,
         rotor: {
             direction: -1,
-            speedResistance: 56,
+            speedResistance: 42,
         }
     },
     treesInForest: 1,
     fractalsPerTree: 1,
     distanceDecrement: 0.655,
-    thicknessReductionStep: 0.25,
-    limit: 7,
+    thicknessReductionStep: 0.3,
+    limit: 9,
     distribution: 2,
-    background: '#0002',
+    background: '#0001',
+    treesColor: '#000',
     growingSpeed: 50
 });
 
