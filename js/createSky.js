@@ -15,7 +15,7 @@ function createSky({ c, random }) {
         const randomHeight = getRandomHeight();
         const x = getX(step, randomWidth);
         const y = getY(step, randomWidth);
-        const r = random(2) + 1;
+        const r = random(globalConfig.sky.maxRadius) + 1;
         return {
             x,
             y,

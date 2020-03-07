@@ -10,7 +10,8 @@ const getGlobalConfig = (props) => ({
     sky: {
         x: () => props.c.width / 2,
         y: () => -props.c.height / 4,
-        starsAmount: 500,
+        maxRadius: 1,
+        starsAmount: 750,
         rotor: {
             direction: -1,
             speedResistance: 42,
