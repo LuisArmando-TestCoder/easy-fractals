@@ -6,6 +6,7 @@ const getGlobalConfig = (props) => ({
         y: () => props.c.height,
         thickness: 9,
         color: '#fff',
+        skyRotation: 75
     },
     sky: {
         x: () => props.c.width / 2,

@@ -10,7 +10,7 @@ function createSky({ c, random }) {
 
     function getStar(index) {
         const { starsAmount } = this;
-        const step = degreesToRadians(360 / starsAmount * index);
+        const step = degreesToRadians(360 / starsAmount * index - globalConfig.initial.skyRotation);
         const randomWidth = getRandomWidth();
         const randomHeight = getRandomHeight();
         const x = getX(step, randomWidth);
