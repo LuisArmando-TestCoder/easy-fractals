@@ -24,10 +24,11 @@ const getGlobalConfig = (props) => ({
     thicknessReductionStep: 0.3,
     limit: 9,
     distribution: 2,
+    growingSpeed: 50,
+    treeSpanFrequency: 150,
     background: '#0001',
     treesColor: '#000',
-    growingSpeed: 50,
-    treeSpanFrequency: 150
+    song: 'assets/sounds/POLO & PAN - Canopée (audio).mp3',
 });
 
 export default getGlobalConfig;
