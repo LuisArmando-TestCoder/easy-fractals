@@ -1,7 +1,8 @@
-const songIframe = document.getElementById('songIframe');
+import aas from './audioAndStars.js';
 
-songIframe.style.display = 'none';
-songIframe.addEventListener('load', () => {
-    songIframe.style.display = 'block';
-    window.addEventListener('blur', () => songIframe.style.zIndex = -1);
+const songCite = document.getElementById('songCite');
+
+aas.audio.addEventListener('canplay', () => {
+    songCite.innerText += ` ${aas.audio.name}`;
+    songCite.cite = aas.audio.name;
 });

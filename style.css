@@ -7,29 +7,21 @@
     --f6: #f899e9;
 }
 
+body, canvas {
+    margin: 0;
+    display: block;
+}
+
+.song-cite {
+    position: fixed;
+    bottom: 0;
+    color: var(--f3);
+    font-family: monospace;
+}
+
 .container {
     background: var(--primary);
     background: -webkit-radial-gradient(circle at 50% -25%, var(--f1), var(--f2), var(--f3));
     background: radial-gradient(circle at 50% -25%, var(--f1), var(--f2), var(--f3));
     min-height: 100vh;
-}
-
-.clickable-iframe {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    opacity: 0;
-}
-
-canvas {
-    /* mix-blend-mode: screen; */
-}
-
-body, canvas {
-    margin: 0;
-    display: block;
 }

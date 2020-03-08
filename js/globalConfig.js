@@ -25,7 +25,8 @@ const getGlobalConfig = (props) => ({
     distribution: 2,
     background: '#0001',
     treesColor: '#000',
-    growingSpeed: 50
+    growingSpeed: 50,
+    treeSpanFrequency: 150
 });
 
 export default getGlobalConfig;

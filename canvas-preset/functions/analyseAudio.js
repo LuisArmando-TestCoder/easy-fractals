@@ -4,7 +4,7 @@ export default function analyseAudio(audio) {
     const source = ctx.createMediaElementSource(audio);
     let audioArray;
     source.connect(analyser);
-    analyser.connect(context.destination);
+    analyser.connect(ctx.destination);
 
     function getAverage(array) {
         return array.reduce((a, b) => a + b) / array.length;
